@@ -33,8 +33,12 @@ class TodoListViewController: UITableViewController {
     
     //MARK - TableView Delegate Methods
     
-    
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(itemArray[indexPath.row])
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+    }
     
     
 }

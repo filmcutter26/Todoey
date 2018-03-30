@@ -65,13 +65,15 @@ class CategoryViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
+    
     func loadCategories() {
         
         categoryArray = realm.objects(Category.self)
         
         tableView.reloadData()
     }
-        
+    
+    
     //MARK: - Add New Categories
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {

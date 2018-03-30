@@ -22,8 +22,6 @@ class TodoListViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.rowHeight = 80.0
-        
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
      
     }
@@ -35,16 +33,10 @@ class TodoListViewController: SwipeTableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        if let item = todoItems?[indexPath.row] {
-            cell.textLabel?.text = item.title
-            
-            cell.accessoryType = item.done ? .checkmark : .none
-        } else {
-            cell.textLabel?.text = "No Items Added"
-        }
-        
+        cell.textLabel?.text = todoItems?[indexPath.row].title ?? "No Item Added Yet"
+     
         return cell
     }
     
@@ -122,28 +114,37 @@ class TodoListViewController: SwipeTableViewController {
 
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-//
-//        if let additionalPredicate = predicate {
-//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-//        } else {
-//            request.predicate = categoryPredicate
-//        }
-//
-////         ^^This optional replaces, this code vv.
-////
-////        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate])
-////
-////        request.predicate = compoundPredicate
-//
-//        do {
-//        itemArray = try context.fetch(request)
-//        } catch {
-//        print("Error fetching data from context \(error)")
-//        }
         tableView.reloadData()
     }
     
+//    override func updateModel(at indexPath: IndexPath) {
+//        if let item = todoItems?[indexPath.row] {
+//            do {
+//                try realm.write {
+//                    realm.delete(item)
+//        }
+//            } catch {
+//                print("Error deliting Item, \(error)")
+//            }
+//
+//        }
+//    }
+//}
+
+//MARK: - Delete Data From Swipe
+
+override func updateModel(at indexPath: IndexPath) {
+    if let item = todoItems?[indexPath.row] {
+        do {
+            try realm.write {
+                realm.delete(item)
+            }
+        } catch {
+            print("Error deleting item, \(error)")
+        }
+    }
+}
+
 }
 
 //MARK: - Search bar methods
@@ -170,6 +171,7 @@ extension TodoListViewController: UISearchBarDelegate {
     
     
     
+
 
 
 
